@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1
+
+- Add README with full feature documentation
+- Add repository field to package.json
+
 ## 0.1.0
 
 - Initial release

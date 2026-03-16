@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2
+
+- Change publisher to kevinjshah2207 (personal namespace on OpenVSX)
+
 ## 0.1.1
 
 - Add README with full feature documentation

@@ -1,0 +1,156 @@
+{
+  "name": "sonar-complexity",
+  "displayName": "SonarComplexity",
+  "description": "Calculate and display cognitive complexity (SonarQube S3776) for functions in JS/TS and Python",
+  "version": "0.1.0",
+  "publisher": "sonar-complexity",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Linters",
+    "Programming Languages"
+  ],
+  "keywords": [
+    "complexity",
+    "cognitive",
+    "sonarqube",
+    "code quality",
+    "metrics"
+  ],
+  "activationEvents": [
+    "onLanguage:javascript",
+    "onLanguage:javascriptreact",
+    "onLanguage:typescript",
+    "onLanguage:typescriptreact",
+    "onLanguage:python"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "SonarComplexity",
+      "properties": {
+        "sonarComplexity.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable cognitive complexity analysis."
+        },
+        "sonarComplexity.thresholds.warning": {
+          "type": "number",
+          "default": 15,
+          "minimum": 1,
+          "description": "Complexity score at or above which a function is marked as warning (yellow)."
+        },
+        "sonarComplexity.thresholds.error": {
+          "type": "number",
+          "default": 25,
+          "minimum": 1,
+          "description": "Complexity score at or above which a function is marked as error (red)."
+        },
+        "sonarComplexity.display.codeLens": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show complexity scores as CodeLens above functions."
+        },
+        "sonarComplexity.display.gutterIcons": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show colored dots in the gutter next to function declarations."
+        },
+        "sonarComplexity.display.diagnostics": {
+          "type": "boolean",
+          "default": true,
+          "description": "Report complexity issues in the Problems panel."
+        },
+        "sonarComplexity.debounceMs": {
+          "type": "number",
+          "default": 300,
+          "minimum": 100,
+          "maximum": 5000,
+          "description": "Debounce delay (ms) before re-analyzing after text changes."
+        },
+        "sonarComplexity.largeFileThreshold": {
+          "type": "number",
+          "default": 10000,
+          "description": "Line count above which large-file optimizations activate."
+        },
+        "sonarComplexity.largeFileMode": {
+          "type": "string",
+          "enum": [
+            "saveOnly",
+            "disabled",
+            "normal"
+          ],
+          "default": "saveOnly",
+          "description": "Behavior for files exceeding largeFileThreshold."
+        },
+        "sonarComplexity.smells.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable code smell detection (S107, S134, S3358, S108, S3699, S1126, S1479)."
+        },
+        "sonarComplexity.smells.maxParameters": {
+          "type": "number",
+          "default": 7,
+          "minimum": 1,
+          "description": "S107: Maximum number of parameters a function may have before being flagged."
+        },
+        "sonarComplexity.smells.maxNestingDepth": {
+          "type": "number",
+          "default": 4,
+          "minimum": 1,
+          "description": "S134: Maximum nesting depth before flagging as too deeply nested."
+        },
+        "sonarComplexity.smells.maxReturns": {
+          "type": "number",
+          "default": 5,
+          "minimum": 1,
+          "description": "S3699: Maximum number of return statements a function may have."
+        },
+        "sonarComplexity.smells.maxSwitchCases": {
+          "type": "number",
+          "default": 30,
+          "minimum": 1,
+          "description": "S1479: Maximum number of cases in a switch statement (JS/TS only)."
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "sonarComplexity.analyzeCurrentFile",
+        "title": "SonarComplexity: Analyze Current File"
+      },
+      {
+        "command": "sonarComplexity.toggleEnabled",
+        "title": "SonarComplexity: Toggle Enabled"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run bundle",
+    "compile": "tsc -p ./",
+    "bundle": "node esbuild.mjs --production",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "test:unit": "vitest run",
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package",
+    "publish:vscode": "vsce publish",
+    "publish:ovsx": "npx ovsx publish"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.80.0",
+    "@vscode/test-electron": "^2.3.0",
+    "@vscode/vsce": "^2.22.0",
+    "esbuild": "^0.27.4",
+    "ovsx": "^0.9.0",
+    "tree-sitter-wasms": "^0.1.13",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0"
+  },
+  "dependencies": {
+    "web-tree-sitter": "^0.24.0"
+  }
+}

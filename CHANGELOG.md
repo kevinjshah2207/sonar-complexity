@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.6
+
+- Fix "Analyze Workspace" not finding files when sonarComplexity.analysis.include is set
+
 ## 0.1.5
 
 - Add `sonarComplexity.analysis.include` setting to target specific folders for workspace analysis (defaults to entire workspace)

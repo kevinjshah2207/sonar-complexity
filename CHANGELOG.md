@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.7
+
+- Fix workspace analysis not finding files — call findFiles per extension instead of brace expansion
+
 ## 0.1.6
 
 - Fix "Analyze Workspace" not finding files when sonarComplexity.analysis.include is set

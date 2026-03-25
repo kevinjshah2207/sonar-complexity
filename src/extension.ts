@@ -96,13 +96,16 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       const config = vscode.workspace.getConfiguration('sonarComplexity');
       const includeFolders = config.get<string[]>('analysis.include', ['**']);
 
+      const extensions = ['js', 'jsx', 'ts', 'tsx', 'py'];
       const allFiles: vscode.Uri[] = [];
       for (const folder of includeFolders) {
-        const pattern = folder === '**'
-          ? '**/*.{js,jsx,ts,tsx,py}'
-          : `${folder}/**/*.{js,jsx,ts,tsx,py}`;
-        const found = await vscode.workspace.findFiles(pattern);
-        allFiles.push(...found);
+        for (const ext of extensions) {
+          const pattern = folder === '**'
+            ? `**/*.${ext}`
+            : `${folder}/**/*.${ext}`;
+          const found = await vscode.workspace.findFiles(pattern);
+          allFiles.push(...found);
+        }
       }
       const files = [...new Map(allFiles.map(u => [u.fsPath, u])).values()];
       if (files.length === 0) {

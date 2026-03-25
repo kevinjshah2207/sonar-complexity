@@ -95,13 +95,16 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     async () => {
       const config = vscode.workspace.getConfiguration('sonarComplexity');
       const includeFolders = config.get<string[]>('analysis.include', ['**']);
-      const exts = ['js', 'jsx', 'ts', 'tsx', 'py'];
-      const patterns = includeFolders.flatMap(folder =>
-        exts.map(ext => folder === '**' ? `**/*.${ext}` : `${folder}/**/*.${ext}`),
-      );
-      const includeGlob = patterns.length === 1 ? patterns[0] : `{${patterns.join(',')}}`;
 
-      const files = await vscode.workspace.findFiles(includeGlob);
+      const allFiles: vscode.Uri[] = [];
+      for (const folder of includeFolders) {
+        const pattern = folder === '**'
+          ? '**/*.{js,jsx,ts,tsx,py}'
+          : `${folder}/**/*.{js,jsx,ts,tsx,py}`;
+        const found = await vscode.workspace.findFiles(pattern);
+        allFiles.push(...found);
+      }
+      const files = [...new Map(allFiles.map(u => [u.fsPath, u])).values()];
       if (files.length === 0) {
         vscode.window.showInformationMessage('SonarComplexity: No supported files found.');
         return;

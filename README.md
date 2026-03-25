@@ -61,13 +61,13 @@ Smell diagnostics appear in the Problems panel alongside complexity diagnostics 
 Search for **SonarComplexity** in the Extensions panel, or install via the command palette:
 
 ```
-ext install sonar-complexity.sonar-complexity
+ext install kevinjshah2207.sonar-complexity
 ```
 
 ### From a `.vsix` file
 
 ```bash
-code --install-extension sonar-complexity-0.1.0.vsix
+code --install-extension sonar-complexity-0.1.7.vsix
 ```
 
 ---
@@ -83,15 +83,7 @@ All settings are under the `sonarComplexity` namespace in VS Code Settings (`Cmd
 | `sonarComplexity.enabled` | `true` | Enable / disable all analysis |
 | `sonarComplexity.thresholds.warning` | `10` | Score at which a function turns yellow (approaching SonarQube limit) |
 | `sonarComplexity.thresholds.error` | `16` | Score at which a function turns red (SonarQube S3776 violation) |
-| `sonarComplexity.analysis.include` | `["**"]` | Folders to include in workspace analysis. Defaults to the entire workspace. |
-
-To restrict analysis to specific folders, set this in your `settings.json`:
-
-```json
-"sonarComplexity.analysis.include": ["src", "lib"]
-```
-
-Only `.js`, `.jsx`, `.ts`, `.tsx`, and `.py` files under those folders will be analyzed.
+| `sonarComplexity.analysis.include` | `["**"]` | Folders to include in workspace analysis (e.g. `["src", "lib"]`). Defaults to the entire workspace. Add items individually — do not type the array brackets in the settings UI. |
 | `sonarComplexity.display.codeLens` | `true` | Show CodeLens above functions |
 | `sonarComplexity.display.gutterIcons` | `true` | Show inline complexity indicator to the right of function declarations |
 | `sonarComplexity.display.diagnostics` | `true` | Report issues in Problems panel |
@@ -160,7 +152,7 @@ npm run bundle
 npm run package
 
 # Install locally
-code --install-extension sonar-complexity-0.1.0.vsix
+code --install-extension sonar-complexity-0.1.7.vsix
 ```
 
 ### Project Structure

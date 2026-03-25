@@ -83,6 +83,15 @@ All settings are under the `sonarComplexity` namespace in VS Code Settings (`Cmd
 | `sonarComplexity.enabled` | `true` | Enable / disable all analysis |
 | `sonarComplexity.thresholds.warning` | `10` | Score at which a function turns yellow (approaching SonarQube limit) |
 | `sonarComplexity.thresholds.error` | `16` | Score at which a function turns red (SonarQube S3776 violation) |
+| `sonarComplexity.analysis.include` | `["**"]` | Folders to include in workspace analysis. Defaults to the entire workspace. |
+
+To restrict analysis to specific folders, set this in your `settings.json`:
+
+```json
+"sonarComplexity.analysis.include": ["src", "lib"]
+```
+
+Only `.js`, `.jsx`, `.ts`, `.tsx`, and `.py` files under those folders will be analyzed.
 | `sonarComplexity.display.codeLens` | `true` | Show CodeLens above functions |
 | `sonarComplexity.display.gutterIcons` | `true` | Show inline complexity indicator to the right of function declarations |
 | `sonarComplexity.display.diagnostics` | `true` | Report issues in Problems panel |
@@ -108,6 +117,7 @@ All settings are under the `sonarComplexity` namespace in VS Code Settings (`Cmd
 |---------|-------------|
 | `SonarComplexity: Analyze Current File` | Force re-analysis of the active file |
 | `SonarComplexity: Analyze Workspace` | Analyze all supported files and populate the Problems panel for the entire repo |
+| `SonarComplexity: Export Problems to File` | Write all current problems to `sonar-complexity-report.md` — use `@file` in Kiro to feed results to the AI |
 | `SonarComplexity: Toggle Enabled` | Quickly toggle the extension on/off |
 
 ---

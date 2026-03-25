@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.5
+
+- Add `sonarComplexity.analysis.include` setting to target specific folders for workspace analysis (defaults to entire workspace)
+- Add "SonarComplexity: Export Problems to File" command — writes all issues to `sonar-complexity-report.md` for use with Kiro via `@file`
+
 ## 0.1.4
 
 - Update README to reflect new thresholds, inline indicators, and Analyze Workspace command

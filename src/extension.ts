@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
+import * as fs from 'fs';
 import { ParserManager } from './core/parserManager';
 import { AnalyzerRegistry } from './analyzers/registry';
 import { ConfigurationService } from './services/configurationService';
@@ -91,10 +93,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   const analyzeWorkspaceCommand = vscode.commands.registerCommand(
     'sonarComplexity.analyzeWorkspace',
     async () => {
-      const files = await vscode.workspace.findFiles(
-        '{**/*.js,**/*.jsx,**/*.ts,**/*.tsx,**/*.py}',
-        '{**/node_modules/**,**/dist/**,**/build/**,.git/**}',
+      const config = vscode.workspace.getConfiguration('sonarComplexity');
+      const includeFolders = config.get<string[]>('analysis.include', ['**']);
+      const exts = ['js', 'jsx', 'ts', 'tsx', 'py'];
+      const patterns = includeFolders.flatMap(folder =>
+        exts.map(ext => folder === '**' ? `**/*.${ext}` : `${folder}/**/*.${ext}`),
       );
+      const includeGlob = patterns.length === 1 ? patterns[0] : `{${patterns.join(',')}}`;
+
+      const files = await vscode.workspace.findFiles(includeGlob);
       if (files.length === 0) {
         vscode.window.showInformationMessage('SonarComplexity: No supported files found.');
         return;
@@ -115,6 +122,63 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     },
   );
 
+  const exportProblemsCommand = vscode.commands.registerCommand(
+    'sonarComplexity.exportProblems',
+    async () => {
+      const allDiagnostics = vscode.languages.getDiagnostics();
+      const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+
+      const lines: string[] = [
+        '# SonarComplexity — Problems Report',
+        `Generated: ${new Date().toISOString()}`,
+        '',
+      ];
+
+      let total = 0;
+      for (const [uri, diagnostics] of allDiagnostics) {
+        const sonar = diagnostics.filter(d => d.source === 'SonarComplexity');
+        if (sonar.length === 0) { continue; }
+
+        const relPath = workspaceRoot
+          ? path.relative(workspaceRoot, uri.fsPath)
+          : uri.fsPath;
+        lines.push(`## ${relPath}`);
+
+        for (const d of sonar) {
+          const sev = d.severity === vscode.DiagnosticSeverity.Error ? 'ERROR' : 'WARN';
+          const line = d.range.start.line + 1;
+          lines.push(`- [${sev}] Line ${line}: ${d.message} (${d.code})`);
+          total++;
+        }
+        lines.push('');
+      }
+
+      if (total === 0) {
+        vscode.window.showInformationMessage(
+          'SonarComplexity: No problems found. Run "Analyze Workspace" first.',
+        );
+        return;
+      }
+
+      lines.unshift(`Total issues: ${total}`, '');
+
+      const outPath = workspaceRoot
+        ? path.join(workspaceRoot, 'sonar-complexity-report.md')
+        : path.join(require('os').tmpdir(), 'sonar-complexity-report.md');
+
+      fs.writeFileSync(outPath, lines.join('\n'), 'utf8');
+
+      const open = await vscode.window.showInformationMessage(
+        `SonarComplexity: Exported ${total} issue(s) to sonar-complexity-report.md`,
+        'Open File',
+      );
+      if (open) {
+        const doc = await vscode.workspace.openTextDocument(outPath);
+        await vscode.window.showTextDocument(doc);
+      }
+    },
+  );
+
   context.subscriptions.push(
     configService,
     analysisService,
@@ -125,6 +189,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     analyzeCommand,
     toggleCommand,
     analyzeWorkspaceCommand,
+    exportProblemsCommand,
     { dispose: () => parserManager.dispose() },
   );
 }

@@ -2,7 +2,7 @@
   "name": "sonar-complexity",
   "displayName": "SonarComplexity",
   "description": "Calculate and display cognitive complexity (SonarQube S3776) for functions in JS/TS and Python",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "publisher": "kevinjshah2207",
   "license": "MIT",
   "repository": {
@@ -39,6 +39,12 @@
           "type": "boolean",
           "default": true,
           "description": "Enable or disable cognitive complexity analysis."
+        },
+        "sonarComplexity.analysis.include": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["**"],
+          "description": "Folders to include in workspace analysis. E.g. [\"src\", \"lib\"]. Defaults to the entire workspace."
         },
         "sonarComplexity.thresholds.warning": {
           "type": "number",
@@ -132,6 +138,10 @@
       {
         "command": "sonarComplexity.analyzeWorkspace",
         "title": "SonarComplexity: Analyze Workspace"
+      },
+      {
+        "command": "sonarComplexity.exportProblems",
+        "title": "SonarComplexity: Export Problems to File"
       }
     ]
   },

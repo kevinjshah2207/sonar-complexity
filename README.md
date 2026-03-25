@@ -10,20 +10,20 @@ A VS Code / Kiro extension that calculates **SonarQube Cognitive Complexity** (S
 
 Measures how hard a function is to understand, using the [SonarQube Cognitive Complexity](https://www.sonarsource.com/docs/CognitiveComplexity.pdf) algorithm. Unlike cyclomatic complexity, it penalises deeply nested logic and rewards simple control flow.
 
-Three severity levels based on configurable thresholds (defaults: **<15 good**, **15–25 warning**, **>25 error**):
+Three severity levels based on configurable thresholds, aligned with SonarQube's S3776 limit of 15 (defaults: **<10 good**, **10–15 warning**, **16+ error**):
 
 | Severity | Threshold | Indicator |
 |----------|-----------|-----------|
-| ✅ Good | < 15 | Green gutter dot |
-| ⚠️ Warning | 15 – 25 | Yellow gutter dot |
-| ❌ Error | > 25 | Red gutter dot |
+| ✅ Good | < 10 | Green inline indicator |
+| ⚠️ Warning | 10 – 15 | Yellow inline indicator (approaching SonarQube limit) |
+| ❌ Error | ≥ 16 | Red inline indicator (SonarQube S3776 violation) |
 
 ### Display Modes
 
 All three modes are active simultaneously and individually toggleable:
 
 - **CodeLens** — `✔ Complexity: 4 [Good]` shown above each function declaration
-- **Gutter icons** — Coloured dot in the editor gutter next to every function
+- **Inline indicators** — Score shown to the right of the function declaration line (e.g. `✔ 4`, `⚠ 12`, `✖ 18`)
 - **Problems panel** — Warning/error diagnostics in the VS Code Problems tab (source: `SonarComplexity`, code: `S3776`)
 
 ### Code Smell Detection
@@ -81,10 +81,10 @@ All settings are under the `sonarComplexity` namespace in VS Code Settings (`Cmd
 | Setting | Default | Description |
 |---------|---------|-------------|
 | `sonarComplexity.enabled` | `true` | Enable / disable all analysis |
-| `sonarComplexity.thresholds.warning` | `15` | Score at which a function turns yellow |
-| `sonarComplexity.thresholds.error` | `25` | Score at which a function turns red |
+| `sonarComplexity.thresholds.warning` | `10` | Score at which a function turns yellow (approaching SonarQube limit) |
+| `sonarComplexity.thresholds.error` | `16` | Score at which a function turns red (SonarQube S3776 violation) |
 | `sonarComplexity.display.codeLens` | `true` | Show CodeLens above functions |
-| `sonarComplexity.display.gutterIcons` | `true` | Show coloured gutter dots |
+| `sonarComplexity.display.gutterIcons` | `true` | Show inline complexity indicator to the right of function declarations |
 | `sonarComplexity.display.diagnostics` | `true` | Report issues in Problems panel |
 | `sonarComplexity.debounceMs` | `300` | Delay (ms) before re-analysing after edits |
 | `sonarComplexity.largeFileThreshold` | `10000` | Line count that triggers large-file mode |
@@ -107,6 +107,7 @@ All settings are under the `sonarComplexity` namespace in VS Code Settings (`Cmd
 | Command | Description |
 |---------|-------------|
 | `SonarComplexity: Analyze Current File` | Force re-analysis of the active file |
+| `SonarComplexity: Analyze Workspace` | Analyze all supported files and populate the Problems panel for the entire repo |
 | `SonarComplexity: Toggle Enabled` | Quickly toggle the extension on/off |
 
 ---

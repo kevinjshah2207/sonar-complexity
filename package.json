@@ -2,7 +2,7 @@
   "name": "sonar-complexity",
   "displayName": "SonarComplexity",
   "description": "Calculate and display cognitive complexity (SonarQube S3776) for functions in JS/TS and Python",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "publisher": "kevinjshah2207",
   "license": "MIT",
   "repository": {
@@ -31,6 +31,9 @@
     "onLanguage:python"
   ],
   "main": "./dist/extension.js",
+  "bin": {
+    "sonar-complexity": "./dist/cli.js"
+  },
   "contributes": {
     "configuration": {
       "title": "SonarComplexity",

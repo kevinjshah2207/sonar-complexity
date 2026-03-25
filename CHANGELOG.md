@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.8
+
+- Add standalone CLI (`sonar-complexity`) — analyze any folder from the shell with `--include`, `--format json|markdown|text`, `--out`, `--warning`, `--error`, `--no-smells`
+- Exit code 1 when error-threshold violations are found (CI/hook friendly)
+
 ## 0.1.7
 
 - Fix workspace analysis not finding files — call findFiles per extension instead of brace expansion

@@ -2,14 +2,27 @@ import * as esbuild from 'esbuild';
 
 const production = process.argv.includes('--production');
 
-await esbuild.build({
-  entryPoints: ['src/extension.ts'],
+const shared = {
   bundle: true,
-  outfile: 'dist/extension.js',
-  external: ['vscode'],
   format: 'cjs',
   platform: 'node',
   target: 'node18',
   sourcemap: !production,
   minify: production,
+};
+
+// VS Code extension bundle
+await esbuild.build({
+  ...shared,
+  entryPoints: ['src/extension.ts'],
+  outfile: 'dist/extension.js',
+  external: ['vscode'],
+});
+
+// Standalone CLI bundle
+await esbuild.build({
+  ...shared,
+  entryPoints: ['cli/index.ts'],
+  outfile: 'dist/cli.js',
+  banner: { js: '#!/usr/bin/env node' },
 });

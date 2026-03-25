@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3
+
+- Replace gutter icons with inline complexity indicators shown to the right of each function declaration
+- Add "SonarComplexity: Analyze Workspace" command to analyze all supported files and populate Problems panel
+- Align default thresholds with SonarQube S3776: warning at 10 (heads-up), error at 16 (SonarQube violation)
+
 ## 0.1.2
 
 - Change publisher to kevinjshah2207 (personal namespace on OpenVSX)

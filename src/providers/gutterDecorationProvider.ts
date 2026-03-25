@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
 import type { DocumentAnalysisService } from '../services/documentAnalysisService';
 import type { ConfigurationService } from '../services/configurationService';
 import { ComplexitySeverity } from '../types/complexity';
@@ -11,25 +10,22 @@ export class GutterDecorationProvider implements vscode.Disposable {
   private disposables: vscode.Disposable[] = [];
 
   constructor(
-    extensionPath: string,
+    _extensionPath: string,
     private analysisService: DocumentAnalysisService,
     private configService: ConfigurationService,
   ) {
-    const iconsDir = path.join(extensionPath, 'resources', 'icons');
+    const afterStyle = { margin: '0 0 0 2em', fontStyle: 'italic', fontSize: '11px' };
 
     this.goodDecoration = vscode.window.createTextEditorDecorationType({
-      gutterIconPath: path.join(iconsDir, 'complexity-good.svg'),
-      gutterIconSize: '80%',
+      after: afterStyle,
     });
 
     this.warningDecoration = vscode.window.createTextEditorDecorationType({
-      gutterIconPath: path.join(iconsDir, 'complexity-warning.svg'),
-      gutterIconSize: '80%',
+      after: afterStyle,
     });
 
     this.errorDecoration = vscode.window.createTextEditorDecorationType({
-      gutterIconPath: path.join(iconsDir, 'complexity-error.svg'),
-      gutterIconSize: '80%',
+      after: afterStyle,
     });
 
     this.disposables.push(
@@ -76,28 +72,37 @@ export class GutterDecorationProvider implements vscode.Disposable {
       return;
     }
 
-    const goodRanges: vscode.Range[] = [];
-    const warningRanges: vscode.Range[] = [];
-    const errorRanges: vscode.Range[] = [];
+    const goodDecorations: vscode.DecorationOptions[] = [];
+    const warningDecorations: vscode.DecorationOptions[] = [];
+    const errorDecorations: vscode.DecorationOptions[] = [];
 
     for (const fn of result.functions) {
-      const range = new vscode.Range(fn.startLine, 0, fn.startLine, 0);
+      const range = new vscode.Range(fn.startLine, 0, fn.startLine, Number.MAX_SAFE_INTEGER);
       switch (fn.severity) {
         case ComplexitySeverity.Good:
-          goodRanges.push(range);
+          goodDecorations.push({
+            range,
+            renderOptions: { after: { contentText: ` ✔ ${fn.score}`, color: new vscode.ThemeColor('charts.green') } },
+          });
           break;
         case ComplexitySeverity.Warning:
-          warningRanges.push(range);
+          warningDecorations.push({
+            range,
+            renderOptions: { after: { contentText: ` ⚠ ${fn.score}`, color: new vscode.ThemeColor('charts.yellow') } },
+          });
           break;
         case ComplexitySeverity.Error:
-          errorRanges.push(range);
+          errorDecorations.push({
+            range,
+            renderOptions: { after: { contentText: ` ✖ ${fn.score}`, color: new vscode.ThemeColor('charts.red') } },
+          });
           break;
       }
     }
 
-    editor.setDecorations(this.goodDecoration, goodRanges);
-    editor.setDecorations(this.warningDecoration, warningRanges);
-    editor.setDecorations(this.errorDecoration, errorRanges);
+    editor.setDecorations(this.goodDecoration, goodDecorations);
+    editor.setDecorations(this.warningDecoration, warningDecorations);
+    editor.setDecorations(this.errorDecoration, errorDecorations);
   }
 
   dispose(): void {

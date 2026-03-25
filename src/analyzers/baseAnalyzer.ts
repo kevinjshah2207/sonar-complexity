@@ -52,7 +52,7 @@ export abstract class BaseAnalyzer implements ILanguageAnalyzer {
   analyzeFunctions(
     tree: Parser.Tree,
     sourceCode: string,
-    thresholds: ComplexityThresholds = { warning: 15, error: 25 },
+    thresholds: ComplexityThresholds = { warning: 10, error: 16 },
   ): FunctionComplexityResult[] {
     const functionNodes = this.findFunctionNodes(tree.rootNode);
     return functionNodes

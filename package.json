@@ -2,7 +2,7 @@
   "name": "sonar-complexity",
   "displayName": "SonarComplexity",
   "description": "Calculate and display cognitive complexity (SonarQube S3776) for functions in JS/TS and Python",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "publisher": "kevinjshah2207",
   "license": "MIT",
   "repository": {
@@ -42,15 +42,15 @@
         },
         "sonarComplexity.thresholds.warning": {
           "type": "number",
-          "default": 15,
+          "default": 10,
           "minimum": 1,
-          "description": "Complexity score at or above which a function is marked as warning (yellow)."
+          "description": "Complexity score at or above which a function is marked as warning (yellow). SonarQube S3776 flags at 15, so 10 gives an early heads-up."
         },
         "sonarComplexity.thresholds.error": {
           "type": "number",
-          "default": 25,
+          "default": 16,
           "minimum": 1,
-          "description": "Complexity score at or above which a function is marked as error (red)."
+          "description": "Complexity score at or above which a function is marked as error (red). SonarQube S3776 flags at 15, so 16+ indicates a violation."
         },
         "sonarComplexity.display.codeLens": {
           "type": "boolean",
@@ -128,6 +128,10 @@
       {
         "command": "sonarComplexity.toggleEnabled",
         "title": "SonarComplexity: Toggle Enabled"
+      },
+      {
+        "command": "sonarComplexity.analyzeWorkspace",
+        "title": "SonarComplexity: Analyze Workspace"
       }
     ]
   },

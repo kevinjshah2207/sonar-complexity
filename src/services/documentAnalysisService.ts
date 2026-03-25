@@ -173,6 +173,21 @@ export class DocumentAnalysisService implements vscode.Disposable {
     }
   }
 
+  async analyzeWorkspaceFiles(uris: vscode.Uri[]): Promise<{ analyzed: number; skipped: number }> {
+    let analyzed = 0;
+    let skipped = 0;
+    for (const uri of uris) {
+      const doc = await vscode.workspace.openTextDocument(uri);
+      const result = await this.analyzeDocument(doc);
+      if (result) {
+        analyzed++;
+      } else {
+        skipped++;
+      }
+    }
+    return { analyzed, skipped };
+  }
+
   private reanalyzeAll(): void {
     for (const doc of vscode.workspace.textDocuments) {
       this.analyzeIfSupported(doc);

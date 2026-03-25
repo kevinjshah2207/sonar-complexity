@@ -88,6 +88,33 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     },
   );
 
+  const analyzeWorkspaceCommand = vscode.commands.registerCommand(
+    'sonarComplexity.analyzeWorkspace',
+    async () => {
+      const files = await vscode.workspace.findFiles(
+        '{**/*.js,**/*.jsx,**/*.ts,**/*.tsx,**/*.py}',
+        '{**/node_modules/**,**/dist/**,**/build/**,.git/**}',
+      );
+      if (files.length === 0) {
+        vscode.window.showInformationMessage('SonarComplexity: No supported files found.');
+        return;
+      }
+      await vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+          title: 'SonarComplexity: Analyzing workspace...',
+          cancellable: false,
+        },
+        async () => {
+          const { analyzed } = await analysisService.analyzeWorkspaceFiles(files);
+          vscode.window.showInformationMessage(
+            `SonarComplexity: Analyzed ${analyzed} file(s). Check the Problems panel.`,
+          );
+        },
+      );
+    },
+  );
+
   context.subscriptions.push(
     configService,
     analysisService,
@@ -97,6 +124,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     diagnosticsProvider,
     analyzeCommand,
     toggleCommand,
+    analyzeWorkspaceCommand,
     { dispose: () => parserManager.dispose() },
   );
 }

@@ -31,8 +31,8 @@ export class ConfigurationService implements vscode.Disposable {
   getThresholds(): ComplexityThresholds {
     const config = vscode.workspace.getConfiguration('sonarComplexity');
     return {
-      warning: config.get<number>('thresholds.warning', 15),
-      error: config.get<number>('thresholds.error', 25),
+      warning: config.get<number>('thresholds.warning', 10),
+      error: config.get<number>('thresholds.error', 16),
     };
   }
 

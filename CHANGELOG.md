@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.4
+
+- Update README to reflect new thresholds, inline indicators, and Analyze Workspace command
+
 ## 0.1.3
 
 - Replace gutter icons with inline complexity indicators shown to the right of each function declaration
